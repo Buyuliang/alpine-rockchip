@@ -1,0 +1,12 @@
+diff --git a/arch/arm64/configs/rockchip_linux_defconfig b/arch/arm64/configs/rockchip_linux_defconfig
+index 9220f20bf..df38c78dd 100644
+--- a/arch/arm64/configs/rockchip_linux_defconfig
++++ b/arch/arm64/configs/rockchip_linux_defconfig
+@@ -195,6 +195,7 @@ CONFIG_NETDEVICES=y
+ # CONFIG_NET_VENDOR_QUALCOMM is not set
+ # CONFIG_NET_VENDOR_RDC is not set
+ CONFIG_R8168=y
++CONFIG_R8169=y
+ # CONFIG_NET_VENDOR_RENESAS is not set
+ # CONFIG_NET_VENDOR_ROCKER is not set
+ # CONFIG_NET_VENDOR_SAMSUNG is not set

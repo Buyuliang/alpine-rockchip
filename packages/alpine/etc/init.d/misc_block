@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+
+description="Find Misc Part service"
+command="/usr/bin/misc_part.sh"
+command_background=true
+pidfile="/var/run/misc_part.pid"
+
+depend() {
+    need localmount
+}
+
+start() {
+    ebegin "Starting Find Misc Part services"
+    start-stop-daemon --start --background --exec "$command" -- $command_args
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping Find Misc Part services"
+    start-stop-daemon --stop --pidfile "$pidfile"
+    ifconfig usb0 down
+    eend $?
+}

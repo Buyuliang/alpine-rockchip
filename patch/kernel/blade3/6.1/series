@@ -1,0 +1,7 @@
+# Note that newline characters should be in LF format
+007-add-blade3-config.patch
+003-cancel-localversion.patch
+006-add-vendor-storage-mac-support.patch
+008-revert_g21p0_to_g18p0.patch
+009-fix-gpu-build-error.patch
+010-add-rk3588-mixtile-blade3-dts.patch

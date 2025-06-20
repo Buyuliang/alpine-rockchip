@@ -1,0 +1,4 @@
+export BOARD_DTS_FILE=rockchip/rk3588-mixtile-blade3.dtb
+export KERNEL_DTS=rk3588-mixtile-blade3
+export BOARD_HOSTNAME=blade3
+export BOARD_CONFIG=blade3_defconfig

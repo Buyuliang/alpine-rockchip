@@ -1,0 +1,52 @@
+name: Build Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set APT mirror to USTC
+        run: |
+          sed -i 's|http://.*.ubuntu.com|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
+          apt update
+          apt purge needrestart -y || true
+          apt upgrade -y
+
+      - name: Install basic dependencies
+        run: |
+          apt update
+          apt install -y openssh-client git sudo build-essential gcc-aarch64-linux-gnu \
+            bison qemu-user-static qemu-system-arm qemu-efi u-boot-tools binfmt-support \
+            debootstrap flex libssl-dev bc rsync kmod cpio xz-utils fakeroot parted \
+            udev dosfstools uuid-runtime git-lfs device-tree-compiler python2 python3 \
+            python-is-python3 fdisk bc debhelper python3-pyelftools python3-setuptools \
+            python3-distutils python3-pkg-resources swig libfdt-dev libpython3-dev \
+            dctrl-tools pkg-config libncurses-dev lz4 cryptsetup
+
+      - name: Make build script executable
+        run: chmod +x build.sh
+
+      - name: Build all
+        run: |
+          ./build.sh all
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          mv build/output/update.img build/output/update-${TIMESTAMP}.img
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: update-image
+          path: build/output/update-*.img

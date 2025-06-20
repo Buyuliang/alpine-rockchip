@@ -1,0 +1,28 @@
+#!/bin/sh
+
+LOG_FILE="/var/log/userdata.log"
+
+mount /userdata
+
+# 判断是否挂载成功
+if mountpoint -q /userdata; then
+    echo "[INFO] /userdata 已挂载成功" >> "$LOG_FILE" 2>&1
+
+    # 检查 resize 标志文件
+    if [ -f /userdata/resize ]; then
+        echo "[INFO] 检测到 /userdata/resize，执行 resize2fs" >> "$LOG_FILE" 2>&1
+
+        resize2fs /dev/mmcblk0p7 >> "$LOG_FILE" 2>&1
+
+        if [ $? -eq 0 ]; then
+            echo "[OK] resize2fs 执行成功，删除标志文件" >> "$LOG_FILE" 2>&1
+            rm -f /userdata/resize >> "$LOG_FILE" 2>&1
+        else
+            echo "[ERROR] resize2fs 执行失败" >> "$LOG_FILE" 2>&1
+        fi
+    else
+        echo "[INFO] 未发现 /userdata/resize 文件，跳过扩容" >> "$LOG_FILE" 2>&1
+    fi
+else
+    echo "[ERROR] /userdata 挂载失败" >> "$LOG_FILE" 2>&1
+fi

@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+
+description="First boot script"
+
+command="/usr/bin/first-boot"
+command_background=true
+pidfile="/run/first-boot.pid"
+
+depend() {
+    after localmount
+    after modules
+}
+
+start() {
+    ebegin "Running first boot script"
+    start-stop-daemon --start --background --make-pidfile --pidfile "$pidfile" --exec "$command"
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping first boot script"
+    start-stop-daemon --stop --pidfile "$pidfile"
+    rc-update del first-boot sysinit
+    rm /etc/init.d/first-boot /usr/bin/first-boot
+    eend $?
+}
