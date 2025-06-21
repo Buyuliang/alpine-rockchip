@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:22.04
+    runs-on: [self-hosted, tom-lvm]
 
     env:
       DEBIAN_FRONTEND: noninteractive
@@ -20,15 +18,15 @@ jobs:
 
       - name: Set APT mirror to USTC
         run: |
-          sed -i 's|http://.*.ubuntu.com|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
-          apt update
-          apt purge needrestart -y || true
-          apt upgrade -y
+          sudo sed -i 's|http://.*.ubuntu.com|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
+          sudo apt update
+          sudo apt purge needrestart -y || true
+          sudo apt upgrade -y
 
       - name: Install basic dependencies
         run: |
-          apt update
-          apt install -y openssh-client git sudo build-essential gcc-aarch64-linux-gnu \
+          sudo apt update
+          sudo apt install -y openssh-client git sudo build-essential gcc-aarch64-linux-gnu \
             bison qemu-user-static qemu-system-arm qemu-efi u-boot-tools binfmt-support \
             debootstrap flex libssl-dev bc rsync kmod cpio xz-utils fakeroot parted \
             udev dosfstools uuid-runtime git-lfs device-tree-compiler python2 python3 \
