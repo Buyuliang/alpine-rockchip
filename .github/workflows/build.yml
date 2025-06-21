@@ -34,6 +34,7 @@ jobs:
               cd /workspace
               chmod +x build.sh
               ./build.sh all
+              sudo chown -R $(id -u):$(id -g) build/
               TIMESTAMP=\$(date +%Y%m%d-%H%M%S)
               mv build/output/update.img build/output/update-\${TIMESTAMP}.img
             "
