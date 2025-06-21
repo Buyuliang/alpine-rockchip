@@ -34,10 +34,12 @@ jobs:
               cd /workspace
               chmod +x build.sh
               ./build.sh all
-              sudo chown -R $(id -u):$(id -g) build/
               TIMESTAMP=\$(date +%Y%m%d-%H%M%S)
               mv build/output/update.img build/output/update-\${TIMESTAMP}.img
             "
+
+      - name: Fix build directory permissions after build
+        run: sudo chown -R $(id -u):$(id -g) build/
 
       - name: Upload update image artifact
         uses: actions/upload-artifact@v4
