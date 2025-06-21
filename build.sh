@@ -82,7 +82,7 @@ function build_update_image() {
 
 function build_all() {
     echo "Building All for $BOARD..."
-    # build_kernel
+    build_kernel
     build_alpine && build_rootfs && build_ramdisk
     build_uboot --spl-new
     build_fit_boot && build_sign_boot
