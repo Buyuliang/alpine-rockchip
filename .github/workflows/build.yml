@@ -15,13 +15,21 @@ jobs:
 
       - name: Run build in Ubuntu 22.04 Docker container
         run: |
-          docker run --rm -v $PWD:/workspace -w /workspace ubuntu-22.04-build-env bash -c "
-            chmod +x build.sh &&
-            ./build.sh all &&
-            TIMESTAMP=\$(date +%Y%m%d-%H%M%S) &&
-            mv build/output/update.img build/output/update-\${TIMESTAMP}.img
-          "
-
+          docker run --rm --privileged -it \
+            -v $PWD:/workspace \
+            --mount type=bind,source=/dev,target=/dev \
+            --mount type=bind,source=/etc/passwd,target=/etc/passwd,readonly \
+            --mount type=bind,source=/etc/group,target=/etc/group,readonly \
+            --mount type=bind,source=/etc/shadow,target=/etc/shadow,readonly \
+            --mount type=bind,source=/etc/sudoers,target=/etc/sudoers,readonly \
+            --user $UID:$GID \
+            ubuntu-22.04-build-env bash -c "
+              chmod +x build.sh &&
+              ./build.sh all &&
+              TIMESTAMP=\$(date +%Y%m%d-%H%M%S) &&
+              mv build/output/update.img build/output/update-\${TIMESTAMP}.img
+            "
+          
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
