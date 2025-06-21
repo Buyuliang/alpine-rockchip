@@ -10,30 +10,35 @@ jobs:
     runs-on: [self-hosted, alpine-build]
 
     steps:
-      - name: Fix permissions before checkout
-        run: sudo rm -rf $GITHUB_WORKSPACE || true
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run build in Ubuntu 22.04 Docker container
+      - name: Clean build directory (if exists)
         run: |
-          docker run --rm --privileged -it \
-            -v $PWD:/workspace \
+          if [ -d build ]; then
+            sudo rm -rf build
+          fi
+
+      - name: Run build in Docker (Ubuntu 22.04)
+        run: |
+          docker run --rm --privileged \
+            -v "$GITHUB_WORKSPACE:/workspace" \
             --mount type=bind,source=/dev,target=/dev \
             --mount type=bind,source=/etc/passwd,target=/etc/passwd,readonly \
             --mount type=bind,source=/etc/group,target=/etc/group,readonly \
             --mount type=bind,source=/etc/shadow,target=/etc/shadow,readonly \
             --mount type=bind,source=/etc/sudoers,target=/etc/sudoers,readonly \
-            --user $UID:$GID \
+            --user $(id -u):$(id -g) \
             ubuntu-22.04-build-env bash -c "
-              chmod +x build.sh &&
-              ./build.sh all &&
-              TIMESTAMP=\$(date +%Y%m%d-%H%M%S) &&
+              set -e
+              cd /workspace
+              chmod +x build.sh
+              ./build.sh all
+              TIMESTAMP=\$(date +%Y%m%d-%H%M%S)
               mv build/output/update.img build/output/update-\${TIMESTAMP}.img
             "
-          
-      - name: Upload artifact
+
+      - name: Upload update image artifact
         uses: actions/upload-artifact@v4
         with:
           name: update-image
