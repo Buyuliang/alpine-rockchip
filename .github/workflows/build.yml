@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Fix permissions before checkout
-        run: sudo chown -R $USER:$USER $GITHUB_WORKSPACE || true
+        run: sudo rm -rf $GITHUB_WORKSPACE || true
 
       - name: Checkout repository
         uses: actions/checkout@v3
