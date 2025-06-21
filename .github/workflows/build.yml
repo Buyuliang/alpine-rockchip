@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted, tom-lvm]
+    runs-on: [self-hosted, alpine-build]
 
     env:
       DEBIAN_FRONTEND: noninteractive
