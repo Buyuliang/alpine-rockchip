@@ -16,13 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set APT mirror to USTC
-        run: |
-          sudo sed -i 's|http://.*.ubuntu.com|http://mirrors.ustc.edu.cn|g' /etc/apt/sources.list
-          sudo apt update
-          sudo apt purge needrestart -y || true
-          sudo apt upgrade -y
-
       - name: Install basic dependencies
         run: |
           sudo apt update
