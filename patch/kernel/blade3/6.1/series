@@ -5,3 +5,4 @@
 008-revert_g21p0_to_g18p0.patch
 009-fix-gpu-build-error.patch
 010-add-rk3588-mixtile-blade3-dts.patch
+011-add-mixtile-logo.patch
