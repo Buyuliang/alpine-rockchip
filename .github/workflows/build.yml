@@ -18,7 +18,6 @@ jobs:
           if [ -d build ]; then
             sudo rm -rf build
           fi
-
       - name: Run build in Docker (Ubuntu 22.04)
         run: |
           docker run --rm --privileged \
@@ -28,7 +27,7 @@ jobs:
             --mount type=bind,source=/etc/group,target=/etc/group,readonly \
             --mount type=bind,source=/etc/shadow,target=/etc/shadow,readonly \
             --mount type=bind,source=/etc/sudoers,target=/etc/sudoers,readonly \
-            -u root \
+            --user $(id -u):$(id -g) \
             ubuntu-22.04-build-env bash -c "
               set -e
               cd /workspace
@@ -37,6 +36,8 @@ jobs:
               TIMESTAMP=\$(date +%Y%m%d-%H%M%S)
               mv build/output/update.img build/output/update-\${TIMESTAMP}.img
             "
+      - name: Fix build directory permissions after build
+        run: sudo chown -R $(id -u):$(id -g) build/
 
       - name: Upload update image artifact
         uses: actions/upload-artifact@v4
