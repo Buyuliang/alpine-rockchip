@@ -28,7 +28,7 @@ jobs:
             --mount type=bind,source=/etc/group,target=/etc/group,readonly \
             --mount type=bind,source=/etc/shadow,target=/etc/shadow,readonly \
             --mount type=bind,source=/etc/sudoers,target=/etc/sudoers,readonly \
-            --u root \
+            -u root \
             ubuntu-22.04-build-env bash -c "
               set -e
               cd /workspace
